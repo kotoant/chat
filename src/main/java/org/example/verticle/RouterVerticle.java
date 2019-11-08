@@ -5,10 +5,13 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import org.example.data.Data;
 
+import static org.example.verticle.util.Addresses.DATABASE_MESSAGE_SAVE;
+import static org.example.verticle.util.Addresses.ROUTER;
+
 public class RouterVerticle extends AbstractVerticle {
     @Override
     public void start() {
-        vertx.eventBus().consumer("router", this::router);
+        vertx.eventBus().consumer(ROUTER, this::router);
     }
 
     private void router(Message<String> message) {
@@ -18,8 +21,8 @@ public class RouterVerticle extends AbstractVerticle {
             System.out.println(data);
             vertx.eventBus().send("/token/" + data.getAddress(), message.body());
 
-            // Сохраняем сообщение в БД
-            vertx.eventBus().send("database.save", message.body());
+            // Save message in database
+            vertx.eventBus().send(DATABASE_MESSAGE_SAVE, message.body());
         }
     }
 }

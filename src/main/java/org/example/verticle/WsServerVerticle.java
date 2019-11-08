@@ -4,6 +4,8 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.http.ServerWebSocket;
 
+import static org.example.verticle.util.Addresses.ROUTER;
+
 public class WsServerVerticle extends AbstractVerticle {
     @Override
     public void start() {
@@ -16,10 +18,10 @@ public class WsServerVerticle extends AbstractVerticle {
         System.out.println("Create WebSocket: " + wsServer.path());
         wsServer.frameHandler(wsFrame -> {
             System.out.println(wsFrame.textData());
-            vertx.eventBus().send("router", wsFrame.textData());
+            vertx.eventBus().send(ROUTER, wsFrame.textData());
         });
 
-        MessageConsumer<String> consumerSendMessage = vertx.eventBus().<String>consumer(wsServer.path(), data -> {
+        MessageConsumer<String> consumerSendMessage = vertx.eventBus().consumer(wsServer.path(), data -> {
             wsServer.writeFinalTextFrame(data.body());
             data.reply("ok");
         });
