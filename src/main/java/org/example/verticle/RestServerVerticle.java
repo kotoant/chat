@@ -99,7 +99,8 @@ public class RestServerVerticle extends AbstractVerticle {
                     return;
                 }
 
-                final String disposition = "inline; filename*=UTF-8''" + encode(imageFile.getString("fileName"));
+                final String disposition = "attachment; filename*=UTF-8''" +
+                        encode(imageFile.getString("fileName"));
 
                 final HttpServerResponse response = context.response()
                         .putHeader("Content-Type", imageFile.getString("contentType"))
