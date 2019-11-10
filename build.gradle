@@ -5,7 +5,9 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 sourceCompatibility = 1.8
-def versionVertx = '3.5.1'
+def versionVertx = '3.8.3'
+def versionSlf4j = '1.7.29'
+def versionAssertJ = '3.14.0'
 mainClassName = 'org.example.Starter'
 
 repositories {
@@ -16,7 +18,14 @@ dependencies {
     compile group: 'io.vertx', name: 'vertx-core', version: versionVertx
     compile group: 'io.vertx', name: 'vertx-web', version: versionVertx
     compile group: 'io.vertx', name: 'vertx-mongo-client', version: versionVertx
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.29'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: versionSlf4j
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: versionSlf4j
+    testCompile group: 'io.vertx', name: 'vertx-web-client', version: versionVertx
+    testCompile group: 'io.vertx', name: 'vertx-unit', version: versionVertx
+    testCompile group: 'io.vertx', name: 'vertx-junit5', version: versionVertx
+    testCompile group: 'org.assertj', name: 'assertj-core', version: versionAssertJ
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
 task fatJar(type: Jar) {
@@ -27,4 +36,8 @@ task fatJar(type: Jar) {
     baseName = project.name + '-fat'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+
+test {
+    useJUnitPlatform()
 }
